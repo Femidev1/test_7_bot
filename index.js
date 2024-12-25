@@ -26,12 +26,12 @@ bot.onText(/\/start/, async (msg) => {
         if (response.status === 201) {
             bot.sendMessage(
                 chatId,
-                `Welcome, ${user.firstName}!\nYour data has been successfully saved. Access your mini-app here:\nhttps://your-mini-app-url`
+                `Welcome, ${user.firstName}!\nYour data has been successfully saved. Access your mini-app here:\nhttps://test-7-front.vercel.app`
             );
         }
     } catch (error) {
         if (error.response && error.response.status === 400) {
-            bot.sendMessage(chatId, 'You are already registered. Access your mini-app here:\nhttps://your-mini-app-url');
+            bot.sendMessage(chatId, 'You are already registered. Access your mini-app here:\nhttps://test-7-front.vercel.app');
         } else {
             bot.sendMessage(chatId, 'Something went wrong. Please try again later.');
         }
