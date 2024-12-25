@@ -1,24 +1,10 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 require('dotenv').config();
-const express = require('express');
 
-const app = express();
-app.use(express.json()); // Middleware to parse incoming JSON requests
-
-// Bot Configuration
-const bot = new TelegramBot(process.env.BOT_TOKEN, { webHook: true });
+// Bot and Backend Config
+const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const backendUrl = process.env.BACKEND_URL;
-
-// Set Webhook
-const webhookUrl = `${process.env.VERCEL_URL}/webhook/${process.env.BOT_TOKEN}`;
-bot.setWebHook(webhookUrl);
-
-// Handle Incoming Updates from Telegram
-app.post(`/webhook/${process.env.BOT_TOKEN}`, (req, res) => {
-    bot.processUpdate(req.body);
-    res.sendStatus(200);
-});
 
 // Start Command
 bot.onText(/\/start/, async (msg) => {
@@ -51,6 +37,3 @@ bot.onText(/\/start/, async (msg) => {
         }
     }
 });
-
-// Vercel serverless function export
-module.exports = app;
