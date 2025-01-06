@@ -18,10 +18,20 @@ bot.onText(/\/start/, async (msg) => {
         lastName: msg.from.last_name || 'No last name',
         languageCode: msg.from.language_code || 'No language code',
         points: 0, // Initialize points to 0
+        avatarURL: "", // Will be updated after fetching profile picture
     };
 
-    // Send user data to the backend
     try {
+        // Fetch User's Profile Photos
+        const photos = await bot.getUserProfilePhotos(msg.from.id);
+        if (photos.total_count > 0) {
+            // Get the file ID of the first profile picture
+            const fileId = photos.photos[0][0].file_id;
+            const file = await bot.getFile(fileId);
+            user.avatarURL = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`;
+        }
+
+        // Send user data to the backend
         const response = await axios.post(`${backendUrl}/user`, user);
         if (response.status === 201) {
             bot.sendMessage(
