@@ -33,17 +33,28 @@ bot.onText(/\/start/, async (msg) => {
 
         // Send user data to the backend
         const response = await axios.post(`${backendUrl}/user`, user);
+        
         if (response.status === 201) {
             bot.sendMessage(
                 chatId,
                 `Welcome, ${user.firstName}!\nYour data has been successfully saved. Access your mini-app here:\nhttps://test-7-front.vercel.app`
             );
-        }
-    } catch (error) {
-        if (error.response && error.response.status === 400) {
-            bot.sendMessage(chatId, 'You are already registered. Access your mini-app here:\nhttps://test-7-front.vercel.app');
         } else {
-            bot.sendMessage(chatId, 'Something went wrong. Please try again later.');
+            bot.sendMessage(chatId, "Something went wrong while saving your data. Please try again.");
+        }
+
+    } catch (error) {
+        console.error("Error in /start command:", error);
+
+        if (error.response) {
+            // If user is already registered
+            if (error.response.status === 400) {
+                bot.sendMessage(chatId, 'You are already registered. Access your mini-app here:\nhttps://test-7-front.vercel.app');
+            } else {
+                bot.sendMessage(chatId, `Server error: ${error.response.data.message || "Please try again later."}`);
+            }
+        } else {
+            bot.sendMessage(chatId, "An unexpected error occurred. Please try again later.");
         }
     }
 });
