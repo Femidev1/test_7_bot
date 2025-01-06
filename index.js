@@ -18,43 +18,22 @@ bot.onText(/\/start/, async (msg) => {
         lastName: msg.from.last_name || 'No last name',
         languageCode: msg.from.language_code || 'No language code',
         points: 0, // Initialize points to 0
-        avatarURL: "", // Will be updated after fetching profile picture
     };
 
+    // Send user data to the backend
     try {
-        // Fetch User's Profile Photos
-        const photos = await bot.getUserProfilePhotos(msg.from.id);
-        if (photos.total_count > 0) {
-            // Get the file ID of the first profile picture
-            const fileId = photos.photos[0][0].file_id;
-            const file = await bot.getFile(fileId);
-            user.avatarURL = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`;
-        }
-
-        // Send user data to the backend
         const response = await axios.post(`${backendUrl}/user`, user);
-        
         if (response.status === 201) {
             bot.sendMessage(
                 chatId,
                 `Welcome, ${user.firstName}!\nYour data has been successfully saved. Access your mini-app here:\nhttps://test-7-front.vercel.app`
             );
-        } else {
-            bot.sendMessage(chatId, "Something went wrong while saving your data. Please try again.");
         }
-
     } catch (error) {
-        console.error("Error in /start command:", error);
-
-        if (error.response) {
-            // If user is already registered
-            if (error.response.status === 400) {
-                bot.sendMessage(chatId, 'You are already registered. Access your mini-app here:\nhttps://test-7-front.vercel.app');
-            } else {
-                bot.sendMessage(chatId, `Server error: ${error.response.data.message || "Please try again later."}`);
-            }
+        if (error.response && error.response.status === 400) {
+            bot.sendMessage(chatId, 'You are already registered. Access your mini-app here:\nhttps://test-7-front.vercel.app');
         } else {
-            bot.sendMessage(chatId, "An unexpected error occurred. Please try again later.");
+            bot.sendMessage(chatId, 'Something went wrong. Please try again later.');
         }
     }
 });
