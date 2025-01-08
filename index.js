@@ -11,7 +11,17 @@ bot.onText(/\/start/, async (msg) => {
 
   await bot.sendMessage(
     chatId,
-    `Welcome, ${msg.from.first_name}! Tap the button below to open Quackarz in full screen.`,
+    `Welcome, ${msg.from.first_name}! 🐥
+
+    How quickly can you conquer the galaxy?
+
+    Tap to fuel your ship, mine tokens, and upgrade your engines.
+    Boost your passive income, strategize your growth, and rule the multiverse!
+
+    Your efforts won’t go unnoticed—big things are coming! 🚀
+    Don’t forget your crew—invite friends and earn even more together!
+
+    Let the cosmic mining begin! 🌠💎`,
     {
       reply_markup: {
         inline_keyboard: [
