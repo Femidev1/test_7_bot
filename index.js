@@ -29,7 +29,7 @@ bot.onText(/\/start/, async (msg) => {
         inline_keyboard: [
           [
             {
-              text: "🚀 Open Quackarz",
+              text: "🚀 Play Quackarz",
               web_app: { url: frontendUrl }, // No token needed anymore!
             },
           ],
